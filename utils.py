@@ -7,10 +7,18 @@ import pytesseract
 import psycopg2
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.docstore.document import Document
 from langchain.chains.question_answering import load_qa_chain
 from langchain_community.llms import Ollama
+
+try:
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+except ImportError:
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+try:
+    from langchain_core.documents import Document
+except ImportError:
+    from langchain.docstore.document import Document
 
 UPLOAD_FOLDER = "uploads"
 INDEX_FOLDER = "faiss_index"
