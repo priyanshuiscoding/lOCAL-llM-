@@ -7,7 +7,6 @@ import pytesseract
 import psycopg2
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain.chains.question_answering import load_qa_chain
 from langchain_community.llms import Ollama
 
 try:
@@ -130,8 +129,14 @@ def query_vectordb(query):
         return "❌ No relevant information found in your uploaded files."
 
     llm = Ollama(model="mistral")  # Or llama2, gemma, etc.
-    chain = load_qa_chain(llm, chain_type="stuff")
-    result = chain.run(input_documents=docs, question=query)
+    context = "\n\n".join(doc.page_content for doc in docs[:5])
+    prompt = (
+        "Use the context below to answer the question.\n\n"
+        f"Context:\n{context}\n\n"
+        f"Question:\n{query}\n\n"
+        "Answer:"
+    )
+    result = llm.invoke(prompt)
     return result
 
 # ✅ Optional: Load and embed PostgreSQL data at startup
