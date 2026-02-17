@@ -9,3 +9,4 @@ uploads/
 faiss_index/
 .streamlit/secrets.toml
 .DS_Store
+notebooklm-local/
